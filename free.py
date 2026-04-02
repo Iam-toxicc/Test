@@ -6,7 +6,7 @@ import threading
 import time
 
 # 🔑 CONFIG
-TOKEN = "YOUR_BOT_TOKEN"
+TOKEN = "8570863778:AAF48XmNGNzKWQym2AZRvyrvMtNk6E9XKAg"
 ADMIN_IDS = [8388076792, 8238387029]  # 👈 multiple admins
 LOGGER_ID = -1003879081687
 MONGO_URL = "mongodb+srv://shourya6055_db_user:Ngt1JdbWoFXhJ9RX@toxic.lsnylyq.mongodb.net/?appName=Toxic"
