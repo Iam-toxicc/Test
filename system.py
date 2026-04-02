@@ -6,10 +6,10 @@ import time
 import threading
 
 # 🔑 CONFIG
-TOKEN = "YOUR_BOT_TOKEN"
-ADMIN_IDS = [123456789]
-LOGGER_ID = -1001234567890
-MONGO_URL = "YOUR_MONGO_URL"
+TOKEN = "8570863778:AAF48XmNGNzKWQym2AZRvyrvMtNk6E9XKAg"
+ADMIN_IDS = [8388076792, 8238387029]
+LOGGER_ID = -1003879081687
+MONGO_URL = "mongodb+srv://shourya6055_db_user:Ngt1JdbWoFXhJ9RX@toxic.lsnylyq.mongodb.net/?appName=Toxic"
 
 bot = telebot.TeleBot(TOKEN)
 
