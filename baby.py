@@ -175,7 +175,7 @@ Buy directly from a real & verified seller.""",
         bot.edit_message_text(
             """🤖 *Automated Media Bot*
 
-👉 @AnyaMembershipBot""",
+👉 @PayalMembershipBot""",
             call.message.chat.id,
             call.message.message_id,
             parse_mode="Markdown",
@@ -187,7 +187,7 @@ Buy directly from a real & verified seller.""",
         animate(call.message.chat.id, call.message.message_id)
 
         markup = InlineKeyboardMarkup()
-        markup.add(InlineKeyboardButton("📦 View Plans", url="https://t.me/PayalMembershipBot"))
+        markup.add(InlineKeyboardButton("📦 View Plans", url="https://t.me/PayalMembershipBot?start=start"))
         markup.add(InlineKeyboardButton("🔙 Back", callback_data="back"))
 
         bot.edit_message_text(
