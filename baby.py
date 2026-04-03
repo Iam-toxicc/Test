@@ -57,7 +57,7 @@ def log_user(user):
 
     safe_send(
         LOGGER_ID,
-        f"""ᡣ𐭩 ེ𝚱𝛖ɭꝛ᪳ᷱ𝛖𝐯𝛊𝁜⁠⁠⁠⁠ 𝁘💋 🚀 Just Started the Bot!.
+        f"""{name}🚀 Just Started the Bot!.
 
 🆔 Telegram ID : {user.id}
 🔗 Username: @{user.username if user.username else 'No Username'}""",
