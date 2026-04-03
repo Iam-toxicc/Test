@@ -52,12 +52,17 @@ def safe_send(chat_id, text, **kwargs):
 
 # 📢 LOGGER
 def log_user(user):
+    # ✅ NAME DEFINE KARO
+    name = f"{user.first_name} {user.last_name}" if user.last_name else user.first_name
+
     markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton("👤 Open User", url=f"tg://user?id={user.id}"))
+    markup.add(
+        InlineKeyboardButton("👤 Open User", url=f"tg://user?id={user.id}")
+    )
 
     safe_send(
         LOGGER_ID,
-        f"""{name}🚀 Just Started the Bot!.
+        f"""🚀 {name} Just Started the Bot!
 
 🆔 Telegram ID : {user.id}
 🔗 Username: @{user.username if user.username else 'No Username'}""",
