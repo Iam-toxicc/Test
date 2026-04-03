@@ -18,7 +18,6 @@ client = MongoClient(MONGO_URL)
 db = client["telegram_bot"]
 users_col = db["users"]
 
-# 👤 Add User
 def add_user(user):
     users_col.update_one(
         {"user_id": user.id},
@@ -30,7 +29,6 @@ def add_user(user):
         upsert=True
     )
 
-# 🔑 Admin Check
 def is_admin(user_id):
     return user_id in ADMIN_IDS
 
@@ -41,20 +39,29 @@ def safe_send(chat_id, text, **kwargs):
     except Exception as e:
         if "blocked by the user" in str(e):
             try:
-                bot.send_message(LOGGER_ID, f"🚫 User Blocked Bot\n🆔 {chat_id}")
+                markup = InlineKeyboardMarkup()
+                markup.add(InlineKeyboardButton("👤 Open User", url=f"tg://user?id={chat_id}"))
+                bot.send_message(
+                    LOGGER_ID,
+                    f"🚫 User Blocked Bot\n\n🆔 Telegram ID : {chat_id}",
+                    reply_markup=markup
+                )
             except:
                 pass
             users_col.delete_one({"user_id": chat_id})
 
 # 📢 LOGGER
 def log_user(user):
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton("👤 Open User", url=f"tg://user?id={user.id}"))
+
     safe_send(
         LOGGER_ID,
-        f"""🚀 New User Started
+        f"""ᡣ𐭩 ེ𝚱𝛖ɭꝛ᪳ᷱ𝛖𝐯𝛊𝁜⁠⁠⁠⁠ 𝁘💋 🚀 Just Started the Bot!.
 
-👤 {user.first_name}
-🆔 {user.id}
-📛 @{user.username if user.username else 'No username'}"""
+🆔 Telegram ID : {user.id}
+🔗 Username: @{user.username if user.username else 'No Username'}""",
+        reply_markup=markup
     )
 
 # 🛡️ Anti Spam
@@ -66,10 +73,9 @@ def is_spam(uid):
     user_last[uid] = now
     return False
 
-# ⚡ ANIMATION
+# 🎬 Animation
 def animate(chat_id, msg_id):
-    steps = ["⏳ Loading.", "⏳ Loading..", "⏳ Loading..."]
-    for s in steps:
+    for s in ["⏳ Loading.", "⏳ Loading..", "⏳ Loading..."]:
         try:
             bot.edit_message_text(s, chat_id, msg_id)
             time.sleep(0.25)
@@ -146,7 +152,6 @@ def callback(call):
     if is_spam(call.from_user.id):
         return
 
-    # 🛒 SELLER
     if call.data == "seller":
         animate(call.message.chat.id, call.message.message_id)
 
@@ -155,34 +160,28 @@ def callback(call):
         markup.add(InlineKeyboardButton("🔙 Back", callback_data="back"))
 
         bot.edit_message_text(
-            """🛒 *Trusted Seller*
-
-Buy directly from a real & verified seller.""",
+            "🛒 *Trusted Seller*\n\nBuy directly from a verified seller.",
             call.message.chat.id,
             call.message.message_id,
             parse_mode="Markdown",
             reply_markup=markup
         )
 
-    # 🤖 MEDIA
     elif call.data == "media":
         animate(call.message.chat.id, call.message.message_id)
 
         markup = InlineKeyboardMarkup()
-        markup.add(InlineKeyboardButton("🤖 Open Bot", url="https://t.me/PayalMembershipBot"))
+        markup.add(InlineKeyboardButton("🤖 Open Bot", url="https://t.me/PayalMembershipBot?start=start"))
         markup.add(InlineKeyboardButton("🔙 Back", callback_data="back"))
 
         bot.edit_message_text(
-            """🤖 *Automated Media Bot*
-
-👉 @PayalMembershipBot""",
+            "🤖 *Automated Media Bot*\n\n👉 @PayalMembershipBot",
             call.message.chat.id,
             call.message.message_id,
             parse_mode="Markdown",
             reply_markup=markup
         )
 
-    # 📦 PLANS
     elif call.data == "plans":
         animate(call.message.chat.id, call.message.message_id)
 
@@ -191,28 +190,24 @@ Buy directly from a real & verified seller.""",
         markup.add(InlineKeyboardButton("🔙 Back", callback_data="back"))
 
         bot.edit_message_text(
-            """📦 *Plans & Purchase*
-
-Visit our official bot to check all plans.""",
+            "📦 *Plans & Purchase*\n\nVisit bot to check plans.",
             call.message.chat.id,
             call.message.message_id,
             parse_mode="Markdown",
             reply_markup=markup
         )
 
-    # 📞 SUPPORT
     elif call.data == "support":
         markup = InlineKeyboardMarkup()
         markup.add(InlineKeyboardButton("🔙 Back", callback_data="back"))
 
         bot.edit_message_text(
-            "📞 Support: @AnyaMembership",
+            "📞 Support: @PayalMembershipBot",
             call.message.chat.id,
             call.message.message_id,
             reply_markup=markup
         )
 
-    # 👑 ADMIN
     elif call.data == "admin":
         if not is_admin(call.from_user.id):
             return
@@ -231,21 +226,18 @@ Visit our official bot to check all plans.""",
             reply_markup=markup
         )
 
-    # 📊 STATS
     elif call.data == "stats":
         total = users_col.count_documents({})
         safe_send(call.message.chat.id, f"📊 Users: {total}")
 
-    # 📢 BROADCAST
     elif call.data == "broadcast":
         safe_send(call.message.chat.id, "Send message:")
         bot.register_next_step_handler(call.message, send_all)
 
-    # 🔙 BACK
     elif call.data == "back":
         main_menu(call)
 
-# 📢 BROADCAST
+# 📢 Broadcast
 def send_all(message):
     for user in users_col.find():
         safe_send(user["user_id"], message.text)
